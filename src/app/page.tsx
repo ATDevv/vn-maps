@@ -4,18 +4,25 @@ import vnData from '../geodata/diaphantinhenglish.json'
 import { useState } from "react"
 import './style.css'
 
+interface IPos {
+  x: number,
+  y: number
+}
+
 export default function Home() {
   const [hoveredRegion, setHoveredRegion] = useState(null)
   const [name, setName] = useState<string>('')
-  // const [pos, setPos] = 
+  const [pos, setPos] = useState<IPos>({ x: 0, y: 0 }) 
 
-  const handleClick = (geo: any) => {
+  const handleClick = (geo: any, e: any) => {
     console.log(geo.properties)
+    console.log('x :', e.clientX, ' ', 'y :',e.clientY);
   }
 
   const handleMouseLeave = () => {
     setHoveredRegion(null)
     setName('')
+    setPos({x:0, y: 0})
   }
 
   return (
@@ -42,14 +49,15 @@ export default function Home() {
                       onMouseEnter={(e) => {
                         setHoveredRegion(geo.rsmKey)
                         setName(nameProvince)
+                        setPos({x: e.clientX, y: e.clientY})
                       }}
                       onMouseLeave={() => handleMouseLeave()}
-                      onClick={() => handleClick(geo)}
+                      onClick={(e) => handleClick(geo, e)}
                       tabIndex={-1}
                     />
                     <text
-                      x={50}
-                      y={250}
+                      x={pos.x}
+                      y={pos.y - 40}
                       fill="black"
                       fontSize="12px"
                       fontWeight="bold"
